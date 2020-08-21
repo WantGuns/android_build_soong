@@ -47,7 +47,14 @@ var (
 	}
 )
 
-const nsjailPath = "prebuilts/build-tools/linux-x86/bin/nsjail"
+// sharkbait: use host's nsjail
+// const nsjailPath = "prebuilts/build-tools/linux-x86/bin/nsjail"
+nsjailPath, err := exec.LookPath("nsjail")
+if err != nil {
+	fmt.Println(err)
+	os.Exit(1)
+}
+
 
 var sandboxConfig struct {
 	once sync.Once
