@@ -18,6 +18,8 @@ import (
 	"bytes"
 	"fmt"
 	"strings"
+	"os"
+	"os/exec"
 
 	"android/soong/ui/metrics"
 	"android/soong/ui/status"
@@ -72,9 +74,16 @@ func DumpMakeVars(ctx Context, config Config, goals, vars []string) (map[string]
 func dumpMakeVars(ctx Context, config Config, goals, vars []string, write_soong_vars bool) (map[string]string, error) {
 	ctx.BeginTrace(metrics.RunKati, "dumpvars")
 	defer ctx.EndTrace()
+	
+	// sharkbait: use host's ckati
+	hostCkati, err := exec.LookPath("ckati")
+	if err != nil {
+		ctx.Println(err)
+		os.Exit(1)
+	}
 
 	cmd := Command(ctx, config, "dumpvars",
-		config.PrebuiltBuildTool("ckati"),
+		hostCkati,
 		"-f", "build/make/core/config.mk",
 		"--color_warnings",
 		"--kati_stats",
