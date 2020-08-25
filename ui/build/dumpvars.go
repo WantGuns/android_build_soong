@@ -21,9 +21,6 @@ import (
 
 	"android/soong/ui/metrics"
 	"android/soong/ui/status"
-
-	"os"
-	"os/exec"
 )
 
 // DumpMakeVars can be used to extract the values of Make variables after the
@@ -77,11 +74,7 @@ func dumpMakeVars(ctx Context, config Config, goals, vars []string, write_soong_
 	defer ctx.EndTrace()
 
 	cmd := Command(ctx, config, "dumpvars",
-
-		// sharkbait: use host's ckati
-		// config.PrebuiltBuildTool("ckati"),
-		exec.LookPath("ckati"),
-
+		config.PrebuiltBuildTool("ckati"),
 		"-f", "build/make/core/config.mk",
 		"--color_warnings",
 		"--kati_stats",

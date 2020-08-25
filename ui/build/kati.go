@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strings"
@@ -62,14 +61,7 @@ func genKatiSuffix(ctx Context, config Config) {
 }
 
 func runKati(ctx Context, config Config, extraSuffix string, args []string, envFunc func(*Environment)) {
-	// sharkbait: use host's kati
-	// executable := config.PrebuiltBuildTool("ckati")
-	executable, err := exec.LookPath("ckati")
-	if err = nil {
-		ctx.Println(err)
-		os.Exit(1)
-	}
-
+	executable := config.PrebuiltBuildTool("ckati")
 	args = append([]string{
 		"--ninja",
 		"--ninja_dir=" + config.OutDir(),
