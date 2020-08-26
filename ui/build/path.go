@@ -19,7 +19,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"runtime"
+	// "runtime"
 	"strings"
 
 	"github.com/google/blueprint/microfactory"
@@ -149,8 +149,12 @@ func SetupPath(ctx Context, config Config) {
 
 	// We put some prebuilts in $PATH, since it's infeasible to add dependencies for all of
 	// them.
-	prebuiltsPath, _ := filepath.Abs("prebuilts/build-tools/path/" + runtime.GOOS + "-x86")
-	myPath = prebuiltsPath + string(os.PathListSeparator) + myPath
+	
+	// sharkbait: do not use the prebuilt tools packaged by AOSP, use host's instead
+	// prebuiltsPath, _ := filepath.Abs("prebuilts/build-tools/path/" + runtime.GOOS + "-x86")
+	// myPath = prebuiltsPath + string(os.PathListSeparator) + myPath
+	hostPath := os.Getenv("PATH")
+	myPath = hostPath + string(os.PathListSeparator) + myPath
 
 	config.Environment().Set("PATH", myPath)
 	config.pathReplaced = true
